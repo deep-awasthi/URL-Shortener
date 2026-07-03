@@ -29,5 +29,14 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+### App data ###
+data/
+*.tmp
+
 ### VS Code ###
 .vscode/
+
+### Docker compose volumes ###
+pg-data/
+redis-data/
+kafka-data/

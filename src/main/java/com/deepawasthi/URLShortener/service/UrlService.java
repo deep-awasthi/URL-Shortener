@@ -2,12 +2,15 @@ package com.deepawasthi.URLShortener.service;
 
 import com.deepawasthi.URLShortener.model.Url;
 import com.deepawasthi.URLShortener.model.UrlDto;
-import org.springframework.stereotype.Service;
 
-@Service
+import java.util.List;
+
 public interface UrlService {
-    public Url generateShortLink(UrlDto urlDta);
-    public Url persistShortLink(Url url);
-    public Url getEncodedUrl(String url);
-    public void deleteShortLink(Url url);
+    Url generateShortLink(UrlDto urlDto);
+    Url getEncodedUrl(String shortCode);
+    List<Url> getAllUrls();
+    void deleteShortLink(String shortCode);
+    List<Url> searchUrls(String query);
+    void recordClick(String shortCode, String originalUrl,
+                     String ipAddress, String userAgent, String referer);
 }

@@ -1,83 +1,58 @@
 package com.deepawasthi.URLShortener.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
-
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "urls")
 public class Url {
+
     @Id
-    @GeneratedValue
-    private long id;
-    @Lob
+    @Column(length = 26)
+    private String id;
+
+    @Column(name = "original_url", nullable = false, columnDefinition = "TEXT")
     private String originalUrl;
-    private String shortLink;
+
+    @Column(name = "short_code", nullable = false, unique = true, length = 32)
+    private String shortCode;
+
+    @Column(name = "creation_date", nullable = false)
     private LocalDateTime creationDate;
+
+    @Column(name = "expiration_date", nullable = false)
     private LocalDateTime expirationDate;
 
-    public Url(long id, String originalUrl, String shortLink, LocalDateTime creationDate, LocalDateTime expirationDate) {
+    @Column(name = "click_count", nullable = false)
+    private long clickCount;
+
+    public Url() {}
+
+    public Url(String id, String originalUrl, String shortCode,
+               LocalDateTime creationDate, LocalDateTime expirationDate) {
         this.id = id;
         this.originalUrl = originalUrl;
-        this.shortLink = shortLink;
+        this.shortCode = shortCode;
         this.creationDate = creationDate;
         this.expirationDate = expirationDate;
+        this.clickCount = 0;
     }
 
-    public Url() {
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
-    }
+    public String getOriginalUrl() { return originalUrl; }
+    public void setOriginalUrl(String originalUrl) { this.originalUrl = originalUrl; }
 
-    public long getId() {
-        return id;
-    }
+    public String getShortCode() { return shortCode; }
+    public void setShortCode(String shortCode) { this.shortCode = shortCode; }
 
-    public void setId(long id) {
-        this.id = id;
-    }
+    public LocalDateTime getCreationDate() { return creationDate; }
+    public void setCreationDate(LocalDateTime creationDate) { this.creationDate = creationDate; }
 
-    public String getOriginalUrl() {
-        return originalUrl;
-    }
+    public LocalDateTime getExpirationDate() { return expirationDate; }
+    public void setExpirationDate(LocalDateTime expirationDate) { this.expirationDate = expirationDate; }
 
-    public void setOriginalUrl(String originalUrl) {
-        this.originalUrl = originalUrl;
-    }
-
-    public String getShortLink() {
-        return shortLink;
-    }
-
-    public void setShortLink(String shortLink) {
-        this.shortLink = shortLink;
-    }
-
-    public LocalDateTime getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(LocalDateTime creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public LocalDateTime getExpirationDate() {
-        return expirationDate;
-    }
-
-    public void setExpirationDate(LocalDateTime expirationDate) {
-        this.expirationDate = expirationDate;
-    }
-
-    @Override
-    public String toString() {
-        return "Url{" +
-                "id=" + id +
-                ", originalUrl='" + originalUrl + '\'' +
-                ", shortLink='" + shortLink + '\'' +
-                ", creationDate=" + creationDate +
-                ", expirationDate=" + expirationDate +
-                '}';
-    }
+    public long getClickCount() { return clickCount; }
+    public void setClickCount(long clickCount) { this.clickCount = clickCount; }
 }

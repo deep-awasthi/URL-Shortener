@@ -1,0 +1,10 @@
+target/
+.git/
+.idea/
+.vscode/
+data/
+*.log
+README.md
+k8s/
+prometheus.yml
+otel-collector-config.yml

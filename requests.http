@@ -1,0 +1,151 @@
+### ============================================
+### URL Shortener — Sample HTTP Requests
+### ============================================
+### Use with: IntelliJ HTTP Client, VS Code REST Client, or httpYac
+### ============================================
+
+### --- Health Check ---
+GET http://localhost:8080/health
+
+### --- Actuator Health ---
+GET http://localhost:8080/actuator/health
+
+### --- Prometheus Metrics ---
+GET http://localhost:8080/actuator/prometheus
+
+### ============================================
+### Authentication
+### ============================================
+
+### --- Register a new user ---
+POST http://localhost:8080/auth/register
+Content-Type: application/json
+
+{
+  "username": "deepa",
+  "password": "mypassword123"
+}
+
+### --- Login and get JWT token ---
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "username": "deepa",
+  "password": "mypassword123"
+}
+
+### --- Login with default admin ---
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
+
+### ============================================
+### URL Operations
+### ============================================
+### Replace <token> with the JWT from /auth/login
+### ============================================
+
+### --- Create short URL (no auth required) ---
+POST http://localhost:8080/api/urls
+Content-Type: application/json
+
+{
+  "url": "https://github.com/deepawasthi"
+}
+
+### --- Create short URL with custom code ---
+POST http://localhost:8080/api/urls
+Content-Type: application/json
+
+{
+  "url": "https://example.com",
+  "customCode": "demo"
+}
+
+### --- Create short URL with expiration ---
+POST http://localhost:8080/api/urls
+Content-Type: application/json
+
+{
+  "url": "https://spring.io/projects/spring-boot",
+  "expirationDate": "2026-12-31"
+}
+
+### --- Create short URL with custom code and expiration ---
+POST http://localhost:8080/api/urls
+Content-Type: application/json
+
+{
+  "url": "https://kafka.apache.org",
+  "customCode": "kafka",
+  "expirationDate": "2026-12-31T23:59:59"
+}
+
+### --- List all URLs ---
+GET http://localhost:8080/api/urls
+
+### --- Search URLs ---
+GET http://localhost:8080/api/urls/search?q=github
+
+### --- Search URLs (another query) ---
+GET http://localhost:8080/api/urls/search?q=example
+
+### ============================================
+### Redirect
+### ============================================
+### Replace <shortCode> with actual code from create response
+### ============================================
+
+### --- Redirect to original URL (returns 302) ---
+GET http://localhost:8080/demo
+
+### --- Check redirect with verbose output ---
+# curl -v http://localhost:8080/demo
+
+### ============================================
+### Admin Dashboard
+### ============================================
+
+### --- Admin page (open in browser) ---
+# http://localhost:8080/admin
+
+### --- Admin API — list all URLs (with JWT) ---
+GET http://localhost:8080/admin/urls
+Authorization: Bearer <token>
+
+### --- Admin API — list all URLs (no auth if ADMIN_TOKEN is empty) ---
+GET http://localhost:8080/admin/urls
+
+### ============================================
+### Resilience & Rate Limiting
+### ============================================
+
+### --- Rapid-fire to test rate limiting (run in a loop) ---
+# for i in $(seq 1 15); do
+#   curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8080/demo
+# done
+### Expect: first 10 succeed (200/302), then 429 Too Many Requests
+
+### ============================================
+### Infrastructure Health
+### ============================================
+
+### --- PostgreSQL ---
+# docker exec url-shortener-postgres-1 psql -U postgres -d urlshortener -c "SELECT count(*) FROM urls;"
+
+### --- Redis ---
+# docker exec url-shortener-redis-1 redis-cli ping
+
+### --- Kafka topics ---
+# docker exec url-shortener-kafka-1 /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list
+
+### --- Elasticsearch cluster health ---
+# curl http://localhost:9200/_cluster/health?pretty
+
+### --- Prometheus targets ---
+# curl http://localhost:9090/api/v1/targets | python3 -m json.tool
